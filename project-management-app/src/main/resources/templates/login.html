@@ -26,7 +26,7 @@
             <button type="submit">Log In</button>
         </form>
         <p>Don't have an account? <a th:href="@{/signup}">Sign Up</a></p>
-        <p th:if="${error}" class="error" th:text="${error}"></p>
+        <p th:if="${param.error}" class="error">Invalid email or password.</p>
     </div>
 </body>
 </html>
