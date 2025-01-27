@@ -3,6 +3,7 @@ package com.anayonzem.project_management_app.controller;
 import com.anayonzem.project_management_app.model.User;
 import com.anayonzem.project_management_app.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,8 +19,13 @@ public class UserController {
     private PasswordEncoder passwordEncoder;
 
     @GetMapping("/")
-    public String root() {
-        return "redirect:/dashboard";
+    public String root(Authentication authentication) {
+        return "index";
+    }
+
+    @GetMapping("/dashboard")
+    public String project(Authentication authentication) {
+        return "dashboard";
     }
 
     @GetMapping("/signup")
@@ -49,11 +55,6 @@ public class UserController {
     @GetMapping("/login")
     public String showLoginForm() {
         return "login";
-    }   
-
-    @GetMapping("/dashboard")
-    public String dashboard(Model model) {
-        model.addAttribute("message", "Welcome to the Dashboard!");
-        return "dashboard";
     }
+
 }
