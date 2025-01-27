@@ -17,11 +17,11 @@ public class User {
     private List<Project> projects;
 
     @OneToMany(mappedBy = "teamLead")
-    private List<User> teamMembers; // List of users managed by this team lead
+    private List<User> teamMembers;
 
     @ManyToOne
     @JoinColumn(name = "team_lead_id")
-    private User teamLead; // Reference to the team lead (self-referencing)
+    private User teamLead;
 
     // Getters and Setters
     public Long getId() { return id; }
