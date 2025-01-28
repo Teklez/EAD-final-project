@@ -1,11 +1,15 @@
 package com.anayonzem.project_management_app.controller;
 
+import com.anayonzem.project_management_app.model.Project;
 import com.anayonzem.project_management_app.model.User;
+import com.anayonzem.project_management_app.repository.ProjectRepository;
 import com.anayonzem.project_management_app.repository.UserRepository;
+import com.anayonzem.project_management_app.service.ProjectService;
 
 import jakarta.transaction.Transactional;
 
 import java.security.Principal;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +28,12 @@ public class UserController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private ProjectService projectService;
+
     @GetMapping("/")
     public String root(Authentication authentication) {
         return "redirect:/dashboard";
@@ -35,7 +45,14 @@ public class UserController {
     }
 
     @GetMapping("/dashboard")
-    public String project(Authentication authentication) {
+    public String project(Authentication authentication, Model model, Principal principal) {
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+
+        List<Project> userProjects = projectRepository.findByTeamLead(user);
+        model.addAttribute("projects", userProjects);
+        model.addAttribute("user", user);
+
         return "dashboard";
     }
 
@@ -72,14 +89,37 @@ public class UserController {
     }
 
     @GetMapping("/members")
-    public String showMembers(Model model) {
-        // model.addAttribute("members", userRepository.findAll());
+    public String getMembersPage(@RequestParam Long projectId, Model model) {
+        Project project = projectService.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+        model.addAttribute("project", project);
         return "members";
     }
 
     @GetMapping("/members/add")
     public String showNewMemberForm(Model model) {
         return "addMember";
+    }
+
+    @PostMapping("/projects/{projectId}/addMember")
+    @Transactional
+    public String addTeamMemberToProject(@PathVariable Long projectId, @RequestParam String memberEmail, Model model) {
+        // Find the project by ID
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+
+        // Find the user by email
+        User user = userRepository.findByEmail(memberEmail)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // Add the user to the project's team members
+        project.getTeamMembers().add(user);
+
+        // Save the project with the updated team members
+        projectRepository.save(project);
+
+        // Redirect to the project's details page or back to the members list
+        return "redirect:/projects/" + projectId + "/members";
     }
 
     @GetMapping("/profile")

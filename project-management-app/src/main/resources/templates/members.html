@@ -83,13 +83,14 @@
           </tr>
         </thead>
         <tbody>
-          <tr th:each="member : ${members}">
+          <tr th:each="member : ${project.teamMembers}">
             <td th:text="${member.id}"></td>
             <td th:text="${member.name}"></td>
             <td th:text="${member.email}"></td>
             <td th:text="${member.role}"></td>
           </tr>
         </tbody>
+        
       </table>
     </div>
 
