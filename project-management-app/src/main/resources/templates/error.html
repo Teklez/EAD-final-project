@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Error Page</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; text-align: center; }
+        .error-container { max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; background-color: #f8d7da; }
+        .error-container h1 { color: #721c24; }
+        .error-container p { color: #856404; }
+        .error-container .status-code { font-size: 2em; font-weight: bold; color: #721c24; }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <h1>Error Occurred!</h1>
+        <p th:text="'Status Code: ' + ${statusCode}"></p>
+        <p th:text="'Error Message: ' + ${errorMessage}"></p>
+        <a href="/" style="color: #007bff; text-decoration: none;">Go back to the homepage</a>
+    </div>
+</body>
+</html>
