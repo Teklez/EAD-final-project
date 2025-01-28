@@ -20,9 +20,13 @@ public class UserController {
 
     @GetMapping("/")
     public String root(Authentication authentication) {
-        return "index";
+        return "redirect:/dashboard";
     }
 
+    @GetMapping("/index")
+    public String index(Authentication authentication) {
+        return "index";
+    }
     @GetMapping("/dashboard")
     public String project(Authentication authentication) {
         return "dashboard";
