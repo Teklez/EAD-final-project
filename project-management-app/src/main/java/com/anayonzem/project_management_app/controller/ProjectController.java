@@ -10,6 +10,8 @@ import com.anayonzem.project_management_app.model.Project;
 import com.anayonzem.project_management_app.model.User;
 import com.anayonzem.project_management_app.repository.ProjectRepository;
 import com.anayonzem.project_management_app.repository.UserRepository;
+import com.anayonzem.project_management_app.service.ChatGptApiService;
+
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,6 +20,9 @@ public class ProjectController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ChatGptApiService chatGptApiService;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -43,6 +48,35 @@ public class ProjectController {
         model.addAttribute("user", user);
 
         return "projectDetails";
+    }
+
+    @GetMapping("/chatProject")
+    public String showChatProjectForm() {
+        return "chatProject";
+    }
+
+    @PostMapping("/chatProject")
+    public String createProjectFromChat(@RequestParam String prompt, Principal principal) {
+        System.out.println(prompt);
+        System.out.println(
+                "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        System.out.println("userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr:" + user.toString());
+        Project project = chatGptApiService.getProjectObject(prompt);
+        System.out.println(
+                "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
+        System.out.println("desctiption:" + project.getDescription());
+        project.setTeamLead(user);
+        System.out.println(
+                "ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg");
+        System.out.println(project.toString());
+
+        projectRepository.save(project);
+
+        System.out.println("savedddddddddddddddddddddddddddddddeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeedddddddddddddd");
+
+        return "redirect:/project";
     }
 
     @GetMapping("/addProject")
