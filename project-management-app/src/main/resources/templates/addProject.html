@@ -21,8 +21,7 @@
         <div class="mb-3">
             <label for="teamLead" class="form-label">Team Lead</label>
             <select id="teamLead" name="teamLead" class="form-select" required>
-                <option value="">Select a Team Lead</option>
-                <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}"></option>
+                <option th:each="user : ${user}" th:value="${user.id}" th:text="${user.name}"></option>
             </select>
         </div>
 
