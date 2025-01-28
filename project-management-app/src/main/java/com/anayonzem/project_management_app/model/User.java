@@ -23,7 +23,6 @@ public class User {
     @JoinColumn(name = "team_lead_id")
     private User teamLead;
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getName() { return name; }
