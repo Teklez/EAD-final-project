@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Tasks</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+      .header-container h1 {
+        margin: 0;
+      }
+      .task-card {
+        margin-bottom: 20px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        padding: 15px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .task-card h3 {
+        margin-top: 0;
+      }
+      .task-card .actions {
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand d-flex align-items-center" href="#">
+        <img src="https://via.placeholder.com/50x50?text=Logo" alt="Logo" />
+      </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+        aria-controls="navbarNav"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/project}">Projects</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/members}">Members</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/profile}">Profile</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container">
+      <!-- Header with title and "New Task" button -->
+      <div class="header-container">
+        <h1>Tasks</h1>
+        <a th:href="@{/tasks/add}" class="btn btn-primary">New Task</a>
+      </div>
+
+      <!-- Task cards -->
+      <div class="row">
+        <div class="col-md-4" th:each="task : ${tasks}">
+          <div class="task-card">
+            <h3 th:text="${task.title}">Task Title</h3>
+            <p th:text="${task.description}">Task description goes here.</p>
+            <p>
+              <strong>Status:</strong>
+              <span th:text="${task.status}">Pending</span>
+            </p>
+            <p>
+              <strong>Assigned To:</strong>
+              <span th:text="${task.assignedTo.name}">John Doe</span>
+            </p>
+            <div class="actions">
+              <a
+                th:href="@{/tasks/edit/{id}(id=${task.id})}"
+                class="btn btn-sm btn-warning"
+                >Edit</a
+              >
+              <a
+                th:href="@{/tasks/delete/{id}(id=${task.id})}"
+                class="btn btn-sm btn-danger"
+                >Delete</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
+</html>
