@@ -1,6 +1,7 @@
 package com.anayonzem.project_management_app.controller;
 
 import java.security.Principal;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,7 +23,11 @@ public class ProjectController {
     private ProjectRepository projectRepository;
 
     @GetMapping("/project")
-    public String getProject() {
+    public String getProject(Model model, Principal principal) {
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        List<Project> userProjects = projectRepository.findByTeamLead(user);
+        model.addAttribute("projects", userProjects);
         return "project";
     }
 
