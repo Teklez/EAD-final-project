@@ -5,6 +5,7 @@ import com.anayonzem.project_management_app.repository.UserRepository;
 
 import jakarta.transaction.Transactional;
 
+import java.security.Principal;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,4 +71,22 @@ public class UserController {
         return "login";
     }
 
+    @GetMapping("/members")
+    public String showMembers(Model model) {
+        // model.addAttribute("members", userRepository.findAll());
+        return "members";
+    }
+
+    @GetMapping("/members/add")
+    public String showNewMemberForm(Model model) {
+        return "addMember";
+    }
+
+    @GetMapping("/profile")
+    public String profile(Model model, Principal principal) {
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        model.addAttribute("user", user);
+        return "profile";
+    }
 }
