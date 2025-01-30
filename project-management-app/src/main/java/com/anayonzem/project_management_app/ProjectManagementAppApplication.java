@@ -16,8 +16,8 @@ public class ProjectManagementAppApplication {
         // Get the EmailService bean from the context
         EmailService emailService = context.getBean(EmailService.class);
         // Call email sending methods
-        emailService.sendProjectInvitation("yonatanalebachew7@gmail.com", "Yonathan", "Awesome Project", "http://example.com", "Example Company");
-        emailService.sendTaskAssignmentNotification("yonatanalebachew7@gmail.com", "Yonathan", "Awesome Task", "Great Project", "Example Company", "http://example.com");
+        // emailService.sendProjectInvitation("amanueltsehay11@gmail.com", "Amanuel", "Awesome Project", "http://localhost:8080/signup", "Example Company");
+        // emailService.sendTaskAssignmentNotification("yonatanalebachew7@gmail.com", "Yonathan", "Awesome Task", "Great Project", "Example Company", "http://localhost:8080/signup");
         
     }
 
