@@ -9,26 +9,94 @@
       rel="stylesheet"
     />
     <style>
+      :root {
+        --primary-color: #006400;
+        --error-color: #dc3545;
+        --text-color: #333;
+        --background-color: #f5f5f5;
+        --card-background: #ffffff;
+        --input-border: #ddd;
+        --input-focus: #006400;
+        --link-color: #006400;
+      }
+
       body {
         font-family: Arial, sans-serif;
         margin: 0;
+        background-color: var(--background-color);
       }
+
       .container {
         margin-top: 50px;
       }
+
+      .navbar {
+        background-color: var(--primary-color) !important;
+        height: 60px;
+      }
+
+      .navbar .nav-link {
+        color: white !important;
+        transition: color 0.3s ease-in-out;
+      }
+
+      .navbar .nav-link:hover {
+        color: var(--background-color) !important;
+      }
+
       .footer {
-        background-color: #f8f9fa;
-        padding: 20px;
+        background-color: var(--primary-color);
+        color: white;
+        padding: 15px;
         text-align: center;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        height: 50px;
+      }
+
+      .btn-primary {
+        background-color: var(--primary-color);
+        border: none;
+      }
+
+      .btn-primary:hover {
+        background-color: #004d00;
+      }
+
+      .list-group-item {
+        transition: transform 0.3s ease-in-out;
+        margin-bottom: 10px;
+        padding: 15px;
+        border-radius: 8px;
+      }
+
+      .list-group-item:hover {
+        transform: translateX(10px);
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .animated {
+        animation: fadeIn 0.6s ease-in-out;
       }
     </style>
   </head>
   <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">
-          <img src="https://via.placeholder.com/50x50?text=Logo" alt="Logo" />
+          <img width="50" height="50" th:src="@{/images/task_image.png}" alt="Logo" />
         </a>
         <button
           class="navbar-toggler"
@@ -43,9 +111,8 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav ms-auto">
-            <!-- Authenticated User Links -->
             <li class="nav-item">
-              <a class="nav-link" href="/project">Projects</a>
+              <a class="nav-link" href="/dashboard">Dashboard</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="/members">Members</a>
@@ -59,25 +126,14 @@
     </nav>
 
     <!-- Projects Section -->
-    <div class="container">
-      <h1 class="mb-4">Projects</h1>
-      <!-- New Project Button -->
-      <div class="row">
-        <div class="col-md-4" th:each="project : ${projects}">
-          <div class="card project-card">
-            <img
-              src="https://via.placeholder.com/400x200?text=Project"
-              class="card-img-top"
-              alt="Project Image"
-            />
-            <div class="card-body">
-              <h5 class="card-title" th:text="${project.name}">Project Name</h5>
-              <p class="card-text" th:text="${project.description}">Project Description</p>
-              <a th:href="@{/project/{id}(id=${project.id})}" class="btn btn-primary">View Details</a>
+    <div class="container animated">
+      <h1 class="mb-4 text-center">Projects</h1>
+      <a href="/addProject" class="btn btn-primary mb-4">New Project</a>
 
-            </div>
-          </div>
-        </div>
+      <div class="list-group">
+        <a href="/tasks" class="list-group-item list-group-item-action">Project 1</a>
+        <a href="/tasks" class="list-group-item list-group-item-action">Project 2</a>
+        <a href="/tasks/edit/" class="list-group-item list-group-item-action">Project 3</a>
       </div>
     </div>
 
