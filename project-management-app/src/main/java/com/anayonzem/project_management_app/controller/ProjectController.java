@@ -57,25 +57,11 @@ public class ProjectController {
 
     @PostMapping("/chatProject")
     public String createProjectFromChat(@RequestParam String prompt, Principal principal) {
-        System.out.println(prompt);
-        System.out.println(
-                "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
         String email = principal.getName();
         User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
-        System.out.println("userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr:" + user.toString());
         Project project = chatGptApiService.getProjectObject(prompt);
-        System.out.println(
-                "iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii");
-        System.out.println("desctiption:" + project.getDescription());
         project.setTeamLead(user);
-        System.out.println(
-                "ggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggg");
-        System.out.println(project.toString());
-
         projectRepository.save(project);
-
-        System.out.println("savedddddddddddddddddddddddddddddddeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeedddddddddddddd");
-
         return "redirect:/project";
     }
 
