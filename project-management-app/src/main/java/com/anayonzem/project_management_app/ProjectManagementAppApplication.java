@@ -6,9 +6,6 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import com.anayonzem.project_management_app.model.Task;
-import com.anayonzem.project_management_app.service.ChatGptApiService;
-
 @SpringBootApplication
 public class ProjectManagementAppApplication {
 
