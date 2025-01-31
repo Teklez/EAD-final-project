@@ -53,6 +53,7 @@ public class UserController {
         model.addAttribute("projects", userProjects);
         model.addAttribute("user", user);
 
+
         return "dashboard";
     }
 
@@ -128,5 +129,14 @@ public class UserController {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
         model.addAttribute("user", user);
         return "profile";
+    }
+
+    @PostMapping("/profile/delete")
+    @Transactional
+    public String deleteProfile(Principal principal) {
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        userRepository.delete(user);
+        return "redirect:/logout";
     }
 }
