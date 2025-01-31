@@ -68,7 +68,11 @@
       <!-- Header with title and "New Task" button -->
       <div class="header-container">
         <h1>Tasks</h1>
-        <a th:href="@{/tasks/add}" class="btn btn-primary">New Task</a>
+        <a
+          th:href="@{/project/{id}/tasks/add(id=${projectId})}"
+          class="btn btn-primary"
+          >New Task</a
+        >
       </div>
 
       <!-- Task cards -->

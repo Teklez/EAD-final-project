@@ -1,76 +1,101 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
+  <head>
+    <meta charset="UTF-8" />
     <title>Project Details</title>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-      rel="stylesheet">
-</head>
-<body>
+      rel="stylesheet"
+    />
+  </head>
+  <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
-        <div class="container">
-            <a class="navbar-brand fw-bold" href="/">Project Manager</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="/dashboard">Dashboard</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/members">Members</a></li>
-                    <li class="nav-item"><a class="nav-link" href="/profile">Profile</a></li>
-                </ul>
-            </div>
+      <div class="container">
+        <a class="navbar-brand fw-bold" href="/">Project Manager</a>
+        <button
+          class="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarNav"
+        >
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav ms-auto">
+            <li class="nav-item">
+              <a class="nav-link" href="/dashboard">Dashboard</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/members">Members</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/profile">Profile</a>
+            </li>
+          </ul>
         </div>
+      </div>
     </nav>
 
-    <!-- Project Details -->
     <div class="container mt-5">
-        <div class="card p-4 shadow-sm">
-            <h1 class="mb-3" th:text="${project.name}">Project Name</h1>
-            <p class="text-muted" th:text="${project.description}">Project Description</p>
+      <div class="card p-4 shadow-sm">
+        <h1 class="mb-3" th:text="${project.name}">Project Name</h1>
+        <p class="text-muted" th:text="${project.description}">
+          Project Description
+        </p>
 
-            <div class="mt-4">
-                <h4 class="fw-bold">Team Lead</h4>
-                <p class="mb-0" th:text="${project.teamLead.name}">Team Lead Name</p>
-            </div>
-
-            <div class="mt-4">
-                <h4 class="fw-bold">Team Members</h4>
-                <table class="table table-hover mt-3">
-                    <thead class="table-light">
-                        <tr>
-                            <th>ID</th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Role</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr th:each="member : ${#sets.toSet(project.teamMembers)}">
-                            <td th:text="${member.id}"></td>
-                            <td th:text="${member.name}"></td>
-                            <td th:text="${member.email}"></td>
-                            <td>
-                                <span class="badge bg-primary" th:if="${member == project.teamLead}">Team Lead</span>
-                                <span class="badge bg-secondary" th:unless="${member == project.teamLead}">Member</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <a th:href="@{/members/add(projectId=${project.id})}" class="btn btn-sm btn-primary">Add Members</a>
-            </div>
-
-            <div class="mt-4">
-                <h4 class="fw-bold">Tasks</h4>
-                <ul class="list-group mt-2">
-                    <li class="list-group-item" th:each="task : ${project.tasks}" th:text="${task.name}">Task Name</li>
-                </ul>
-            </div>
+        <div class="mt-4">
+          <h4 class="fw-bold">Team Lead</h4>
+          <p class="mb-0" th:text="${project.teamLead.name}">Team Lead Name</p>
         </div>
+
+        <div class="mt-4">
+          <h4 class="fw-bold">Team Members</h4>
+          <table class="table table-hover mt-3">
+            <thead class="table-light">
+              <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr th:each="member : ${#sets.toSet(project.teamMembers)}">
+                <td th:text="${member.id}"></td>
+                <td th:text="${member.name}"></td>
+                <td th:text="${member.email}"></td>
+                <td>
+                  <span
+                    class="badge bg-primary"
+                    th:if="${member == project.teamLead}"
+                    >Team Lead</span
+                  >
+                  <span
+                    class="badge bg-secondary"
+                    th:unless="${member == project.teamLead}"
+                    >Member</span
+                  >
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <a
+            th:href="@{/members/add(projectId=${project.id})}"
+            class="btn btn-sm btn-primary"
+            >Add Members</a
+          >
+        </div>
+      </div>
+    </div>
+    <div class="container mt-3">
+      <a
+        th:href="@{/project/{id}/tasks(id=${project.id})}"
+        class="btn btn-sm btn-primary"
+        >To Tasks</a
+      >
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+  </body>
 </html>
