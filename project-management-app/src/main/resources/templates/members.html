@@ -68,7 +68,7 @@
     <div class="container my-5">
       <div class="header-container">
         <h1 class="h3 fw-bold">Members</h1>
-        <a th:href="@{/members/add}" class="btn btn-primary">
+        <a th:href="@{/members/add/{projectId}}" class="btn btn-primary">
           <i class="bi bi-plus-circle me-1"></i> Add New Member
         </a>
       </div>
@@ -82,14 +82,14 @@
             <th>Role</th>
           </tr>
         </thead>
-        <tbody>
-          <tr th:each="member : ${project.teamMembers}">
-            <td th:text="${member.id}"></td>
-            <td th:text="${member.name}"></td>
-            <td th:text="${member.email}"></td>
-            <td th:text="${member.role}"></td>
-          </tr>
-        </tbody>
+        <tr th:each="member : ${#sets.toSet(project.teamMembers)}">
+          <td th:text="${member.id}"></td>
+          <td th:text="${member.name}"></td>
+          <td th:text="${member.email}"></td>
+          <td th:text="${member == project.teamLead} ? 'Team Lead' : 'Member'"></td>
+      </tr>
+      
+        
         
       </table>
     </div>

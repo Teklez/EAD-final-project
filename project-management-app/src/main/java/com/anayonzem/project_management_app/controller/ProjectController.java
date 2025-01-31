@@ -11,6 +11,7 @@ import com.anayonzem.project_management_app.model.User;
 import com.anayonzem.project_management_app.repository.ProjectRepository;
 import com.anayonzem.project_management_app.repository.UserRepository;
 import com.anayonzem.project_management_app.service.ChatGptApiService;
+import com.anayonzem.project_management_app.service.EmailService;
 
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +27,9 @@ public class ProjectController {
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping("/project")
     public String getProject(Model model, Principal principal) {
@@ -75,8 +79,11 @@ public class ProjectController {
     }
 
     @PostMapping("/project/add")
-    public String addProject(@ModelAttribute Project project) {
-
+    public String addProject(@ModelAttribute Project project, Principal principal) {
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        project.setTeamLead(user);
+        project.getTeamMembers().add(user);
         projectRepository.save(project);
         return "redirect:/project";
     }
