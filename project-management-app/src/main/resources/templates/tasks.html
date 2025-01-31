@@ -8,32 +8,48 @@
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
     />
     <style>
-      .header-container {
+      .task-card {
+        margin-bottom: 20px;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+        width: 100%;
+      }
+      .task-card:hover {
+        transform: scale(1.02);
+      }
+      .task-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 20px;
       }
-      .header-container h1 {
-        margin: 0;
-      }
-      .task-card {
-        margin-bottom: 20px;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        padding: 15px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-      .task-card h3 {
-        margin-top: 0;
-      }
-      .task-card .actions {
+      .task-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         margin-top: 10px;
+      }
+      .badge-priority {
+        padding: 5px 10px;
+        font-size: 0.9rem;
+        border-radius: 5px;
+      }
+      .priority-low {
+        background-color: #28a745;
+        color: white;
+      }
+      .priority-medium {
+        background-color: #ffc107;
+        color: black;
+      }
+      .priority-high {
+        background-color: #dc3545;
+        color: white;
       }
     </style>
   </head>
   <body>
-    <!-- Navigation bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <a class="navbar-brand" href="#">
         <img width="100" th:src="@{/images/task_image.png}" alt="Logo" />
@@ -43,9 +59,6 @@
         type="button"
         data-toggle="collapse"
         data-target="#navbarNav"
-        aria-controls="navbarNav"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
       >
         <span class="navbar-toggler-icon"></span>
       </button>
@@ -64,8 +77,7 @@
       </div>
     </nav>
 
-    <div class="container">
-      <!-- Header with title and "New Task" button -->
+    <div class="container mt-4">
       <div class="header-container">
         <h1>Tasks</h1>
         <a
@@ -75,39 +87,124 @@
         >
       </div>
 
-      <!-- Task cards -->
       <div class="row">
-        <div class="col-md-4" th:each="task : ${tasks}">
-          <div class="task-card">
-            <h3 th:text="${task.title}">Task Title</h3>
-            <p th:text="${task.description}">Task description goes here.</p>
+        <div class="col-md-12" th:each="task : ${tasks}">
+          <div class="task-card border-left-primary p-3 bg-white">
+            <div class="task-header">
+              <span class="font-weight-bold" th:text="${task.title}"
+                >Task Title</span
+              >
+              <span
+                th:classappend="${task.priority == 'Low' ? 'priority-low' : (task.priority == 'Medium' ? 'priority-medium' : 'priority-high')}"
+                class="badge-priority"
+                th:text="${task.priority}"
+              >
+                Priority
+              </span>
+            </div>
+            <p class="text-muted" th:text="${task.description}">
+              Task description goes here.
+            </p>
             <p>
               <strong>Status:</strong>
-              <span th:text="${task.status}">Pending</span>
+              <span th:text="${task.status}">To Do</span>
             </p>
             <p>
-              <strong>Assigned To:</strong>
-              <span th:text="${task.assignedTo.name}">John Doe</span>
+              <strong>Deadline:</strong>
+              <span
+                th:text="${#temporals.format(task.deadline, 'yyyy-MM-dd HH:mm')}"
+              ></span>
             </p>
-            <div class="actions">
-              <a
-                th:href="@{/tasks/edit/{id}(id=${task.id})}"
-                class="btn btn-sm btn-warning"
-                >Edit</a
+            <p>
+              <strong>Created At:</strong>
+              <span
+                th:text="${#temporals.format(task.createdAt, 'yyyy-MM-dd HH:mm')}"
+              ></span>
+            </p>
+            <form
+              th:action="@{/tasks/update/status/{id}(id=${task.id}, projectId=${projectId})}"
+              method="post"
+            >
+              <div class="form-group">
+                <label>Change Status:</label>
+                <select
+                  class="form-control"
+                  name="status"
+                  th:value="${task.status}"
+                >
+                  <option value="To Do" th:selected="${task.status == 'To Do'}">
+                    To Do
+                  </option>
+                  <option
+                    value="In Progress"
+                    th:selected="${task.status == 'In Progress'}"
+                  >
+                    In Progress
+                  </option>
+                  <option
+                    value="Completed"
+                    th:selected="${task.status == 'Completed'}"
+                  >
+                    Completed
+                  </option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-sm btn-primary">
+                Update Status
+              </button>
+            </form>
+
+            <form
+              th:action="@{/tasks/update/priority/{id}(id=${task.id}, projectId=${projectId})}"
+              method="post"
+            >
+              <div class="form-group">
+                <label>Change Priority:</label>
+                <select
+                  class="form-control"
+                  name="priority"
+                  th:value="${task.priority}"
+                >
+                  <option value="Low" th:selected="${task.priority == 'Low'}">
+                    Low
+                  </option>
+                  <option
+                    value="Medium"
+                    th:selected="${task.priority == 'Medium'}"
+                  >
+                    Medium
+                  </option>
+                  <option value="High" th:selected="${task.priority == 'High'}">
+                    High
+                  </option>
+                </select>
+              </div>
+              <button type="submit" class="btn btn-sm btn-primary">
+                Update Priority
+              </button>
+            </form>
+
+            <div class="task-footer">
+              <div>
+                <strong>Assigned To:</strong>
+                <span
+                  th:text="${task.assignedTo != null ? task.assignedTo.name : 'Unassigned'}"
+                  >John Doe</span
+                >
+              </div>
+              <form
+                th:action="@{/tasks/delete/{taskId}(taskId=${task.id})}"
+                method="post"
               >
-              <a
-                th:href="@{/tasks/delete/{id}(id=${task.id})}"
-                class="btn btn-sm btn-danger"
-                >Delete</a
-              >
+                <input type="hidden" name="projectId" th:value="${projectId}" />
+                <button class="btn btn-sm btn-danger" type="submit">
+                  Delete
+                </button>
+              </form>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
   </body>
 </html>
