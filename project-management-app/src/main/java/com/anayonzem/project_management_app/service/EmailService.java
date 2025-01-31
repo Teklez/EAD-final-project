@@ -22,25 +22,35 @@ public class EmailService {
     private String fromEmail;
 
     private static final String PROJECT_PATH = "src/main/resources/templates/project_invitation.html";
+    private static final String NOTIFICATION_PATH = "src/main/resources/templates/project_invitation.html";
     private static final String TASK_PATH = "src/main/resources/templates/task_reminder.html";
+    private static final String PLATFORM_PATH = "src/main/resources/templates/platform_invitation.html";
 
-    public void sendProjectInvitation(String recipientEmail, String name, String projectName, String invitationLink, String companyName) {
+    public void sendProjectMemebrNotification(String recipientEmail, String name, String projectName,
+            String invitationLink) {
         String subject = "You're Invited to Join the Project: " + projectName;
-        String emailContent = loadHtmlTemplate(name, projectName, invitationLink, companyName);
+        String emailContent = loadHtmlTemplate(name, projectName, invitationLink, "");
         sendEmail(recipientEmail, subject, emailContent);
     }
 
-    public void sendTaskAssignmentNotification(String recipientEmail, String name, String taskName, String projectName, String companyName, String taskLink) {
+    public void sendTaskAssignmentNotification(String recipientEmail, String name, String taskName, String projectName,
+            String companyName, String taskLink) {
         String subject = "New Task Assigned: " + taskName;
         String contentText = loadHtmlTemplate_task(name, taskName, projectName, companyName, taskLink);
         sendEmail(recipientEmail, subject, contentText);
     }
 
-    private void sendEmail(String recipientEmail, String subject, String htmlContent ) {
+    public void sendPlatformInvitation(String recipientEmail, String name, String invitationLink) {
+        String subject = "You're Invited to join our Platform ";
+        String contentText = loadHtmlTemplate_platform(name, invitationLink);
+        sendEmail(recipientEmail, subject, contentText);
+    }
+
+    private void sendEmail(String recipientEmail, String subject, String htmlContent) {
         System.out.println("Sending email to: " + recipientEmail);
         Email from = new Email(fromEmail);
         Email to = new Email(recipientEmail);
-        Content content = new Content("text/html", htmlContent); 
+        Content content = new Content("text/html", htmlContent);
         Mail mail = new Mail();
         mail.setFrom(from);
         mail.setSubject(subject);
@@ -67,7 +77,7 @@ public class EmailService {
 
     private String loadHtmlTemplate(String name, String projectName, String invitationLink, String companyName) {
         try {
-            String htmlTemplate = new String(Files.readAllBytes(Paths.get(PROJECT_PATH)));
+            String htmlTemplate = new String(Files.readAllBytes(Paths.get(NOTIFICATION_PATH)));
             return htmlTemplate
                     .replace("{{NAME}}", name)
                     .replace("{{PROJECT_NAME}}", projectName)
@@ -79,7 +89,8 @@ public class EmailService {
         }
     }
 
-    private String loadHtmlTemplate_task(String name, String taskName, String projectName, String companyName, String taskLink) {
+    private String loadHtmlTemplate_task(String name, String taskName, String projectName, String companyName,
+            String taskLink) {
         try {
             String htmlTemplate = new String(Files.readAllBytes(Paths.get(TASK_PATH)));
             return htmlTemplate
@@ -88,6 +99,19 @@ public class EmailService {
                     .replace("{{PROJECT_LINK}}", projectName)
                     .replace("{{COMPANY_NAME}}", companyName)
                     .replace("{{TASK_LINK}}", taskLink);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "Error loading email template.";
+        }
+    }
+
+    private String loadHtmlTemplate_platform(String name, String projectLink) {
+        try {
+            String htmlTemplate = new String(Files.readAllBytes(Paths.get(PLATFORM_PATH)));
+            return htmlTemplate
+                    .replace("{{NAME}}", name)
+                    .replace("{{INVITATION_LINK}}", projectLink);
 
         } catch (IOException e) {
             e.printStackTrace();

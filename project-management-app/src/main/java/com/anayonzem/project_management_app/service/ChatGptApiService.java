@@ -47,7 +47,7 @@ public class ChatGptApiService {
      * Converts a project description into a Project object.
      */
     public Project getProjectObject(String prompt) {
-        String context = "You are a very helpful assistant that transforms a given project description into JSON. The JSON must have fields: 'name', 'description', 'deadline', and 'priority' and make the description short.";
+        String context = "You are a very helpful assistant that transforms a given project description into JSON. The JSON must have fields: 'name', 'description', 'deadline', and 'priority' and make the description longer.";
         String contextualPrompt = context + " " + prompt;
 
         if (prompt == null || prompt.isBlank()) {

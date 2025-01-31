@@ -4,15 +4,18 @@ import com.anayonzem.project_management_app.model.Project;
 import com.anayonzem.project_management_app.model.User;
 import com.anayonzem.project_management_app.repository.ProjectRepository;
 import com.anayonzem.project_management_app.repository.UserRepository;
+import com.anayonzem.project_management_app.service.EmailService;
 import com.anayonzem.project_management_app.service.ProjectService;
 
 import jakarta.transaction.Transactional;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -33,6 +36,9 @@ public class UserController {
 
     @Autowired
     private ProjectService projectService;
+
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping("/")
     public String root(Authentication authentication) {
@@ -88,6 +94,18 @@ public class UserController {
         return "login";
     }
 
+    @GetMapping("/find")
+    public ResponseEntity<?> findUserByEmail(@RequestParam String email) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            return ResponseEntity.ok(Map.of("exists", true, "name", user.getName()));
+        } else {
+            return ResponseEntity.ok(Map.of("exists", false));
+        }
+    }
+
     @GetMapping("/members")
     public String getMembersPage(@RequestParam Long projectId, Model model) {
         Project project = projectService.findById(projectId)
@@ -97,29 +115,30 @@ public class UserController {
     }
 
     @GetMapping("/members/add")
-    public String showNewMemberForm(Model model) {
+    public String showNewMemberForm(@RequestParam Long projectId, Model model) {
+        Project project = projectService.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
+        model.addAttribute("project", project);
         return "addMember";
     }
 
     @PostMapping("/projects/{projectId}/addMember")
     @Transactional
-    public String addTeamMemberToProject(@PathVariable Long projectId, @RequestParam String memberEmail, Model model) {
-        // Find the project by ID
+    public String addTeamMemberToProject(@PathVariable Long projectId, @RequestParam String memberEmail) {
+        // Find the project
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
-        // Find the user by email
+        // Find the user
         User user = userRepository.findByEmail(memberEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Add the user to the project's team members
+        // Add the user to the project
         project.getTeamMembers().add(user);
-
-        // Save the project with the updated team members
         projectRepository.save(project);
-
-        // Redirect to the project's details page or back to the members list
-        return "redirect:/projects/" + projectId + "/members";
+        String invitationLink = "http://localhost:8080/project/" + project.getId();
+        emailService.sendProjectMemebrNotification(memberEmail, user.getName(), project.getName(), invitationLink);
+        return "redirect:/project/" + projectId;
     }
 
     @GetMapping("/profile")
@@ -129,4 +148,11 @@ public class UserController {
         model.addAttribute("user", user);
         return "profile";
     }
+
+    @PostMapping("/email/invite")
+    public String sendProjectInvitationEmail(@RequestParam String memberEmail) {
+        emailService.sendPlatformInvitation(memberEmail, "Yoni", "https://localhost:8080/signup");
+        return "redirect:/project";
+    }
+
 }
