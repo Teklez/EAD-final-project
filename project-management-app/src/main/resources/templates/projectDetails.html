@@ -69,8 +69,36 @@
                 </ul>
             </div>
         </div>
+        <form
+        th:action="@{/project/{id}/delete(id=${project.id})}"
+        method="post"
+        >
+            
+
+        <button type="submit" class="btn btn-danger" >Delete Project</button>
+
+        </form>
+
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function deleteProject(projectId) {
+    fetch(`/project/${projectId}`, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        }
+    }).then(response => {
+        if (response.ok) {
+            window.location.href = "/project"; // Redirect after delete
+        } else {
+            alert("Failed to delete project");
+        }
+    });
+}
+
+
+    </script>
 </body>
 </html>

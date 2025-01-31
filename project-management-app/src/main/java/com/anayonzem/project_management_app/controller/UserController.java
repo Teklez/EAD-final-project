@@ -151,7 +151,7 @@ public class UserController {
 
     @PostMapping("/email/invite")
     public String sendProjectInvitationEmail(@RequestParam String memberEmail) {
-        emailService.sendPlatformInvitation(memberEmail, "Yoni", "https://localhost:8080/signup");
+        emailService.sendPlatformInvitation(memberEmail, "", "http://localhost:8080/signup");
         return "redirect:/project";
     }
 

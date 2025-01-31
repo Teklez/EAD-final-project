@@ -28,7 +28,7 @@ public class EmailService {
 
     public void sendProjectMemebrNotification(String recipientEmail, String name, String projectName,
             String invitationLink) {
-        String subject = "You're Invited to Join the Project: " + projectName;
+        String subject = "You've Joined the Project: " + projectName;
         String emailContent = loadHtmlTemplate(name, projectName, invitationLink, "");
         sendEmail(recipientEmail, subject, emailContent);
     }

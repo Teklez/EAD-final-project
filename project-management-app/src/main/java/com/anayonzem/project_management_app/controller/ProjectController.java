@@ -88,4 +88,21 @@ public class ProjectController {
         return "redirect:/project";
     }
 
+    @PostMapping("/project/{id}/delete")
+    public String deleteProject(@PathVariable Long id, Principal principal) {
+        String email = principal.getName();
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
+        Project project = projectRepository.findById(id).orElseThrow(() -> new RuntimeException("Project not found"));
+
+        if (!project.getTeamLead().equals(user)) {
+            System.out.println(
+                    "Userrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr: "
+                            + user);
+            throw new RuntimeException("You are not authorized to delete this project");
+        }
+
+        projectRepository.deleteById(id);
+        return "redirect:/project";
+    }
+
 }

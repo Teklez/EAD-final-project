@@ -15,4 +15,6 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
     List<Project> findAll();
 
+    void deleteById(Long id);
+
 }
