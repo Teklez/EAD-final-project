@@ -51,6 +51,7 @@
             backdrop-filter: blur(10px);
             animation: fadeInUp 0.8s ease-out;
             padding: 1rem 2rem;
+            height: 100px;
         }
 
         .navbar-brand img {
@@ -234,6 +235,7 @@
                      th:onclick="|window.location.href='@{/project/{id}/tasks/{taskId}(id=${projectId}, taskId=${task.id})}'|">
                     <h5 th:text="${task.title}">Task Title</h5>
                     <p th:text="${task.description}">Task description goes here.</p>
+                    
                 </div>
             </div>
         </div>
