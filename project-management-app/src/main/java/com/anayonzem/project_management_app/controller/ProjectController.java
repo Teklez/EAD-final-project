@@ -50,7 +50,7 @@ public class ProjectController {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new RuntimeException("User not found"));
         model.addAttribute("user", user);
-
+        
         return "projectDetails";
     }
 

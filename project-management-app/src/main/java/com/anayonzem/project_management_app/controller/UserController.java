@@ -59,7 +59,6 @@ public class UserController {
         model.addAttribute("projects", userProjects);
         model.addAttribute("user", user);
 
-
         return "dashboard";
     }
 
@@ -126,15 +125,13 @@ public class UserController {
     @PostMapping("/projects/{projectId}/addMember")
     @Transactional
     public String addTeamMemberToProject(@PathVariable Long projectId, @RequestParam String memberEmail) {
-        // Find the project
+
         Project project = projectRepository.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
 
-        // Find the user
         User user = userRepository.findByEmail(memberEmail)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        // Add the user to the project
         project.getTeamMembers().add(user);
         projectRepository.save(project);
         String invitationLink = "http://localhost:8080/project/" + project.getId();

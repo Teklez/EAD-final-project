@@ -15,37 +15,10 @@
         box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         transition: transform 0.2s;
         width: 100%;
+        cursor: pointer;
       }
       .task-card:hover {
         transform: scale(1.02);
-      }
-      .task-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-      .task-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 10px;
-      }
-      .badge-priority {
-        padding: 5px 10px;
-        font-size: 0.9rem;
-        border-radius: 5px;
-      }
-      .priority-low {
-        background-color: #28a745;
-        color: white;
-      }
-      .priority-medium {
-        background-color: #ffc107;
-        color: black;
-      }
-      .priority-high {
-        background-color: #dc3545;
-        color: white;
       }
     </style>
   </head>
@@ -89,119 +62,14 @@
 
       <div class="row">
         <div class="col-md-12" th:each="task : ${tasks}">
-          <div class="task-card border-left-primary p-3 bg-white">
-            <div class="task-header">
-              <span class="font-weight-bold" th:text="${task.title}"
-                >Task Title</span
-              >
-              <span
-                th:classappend="${task.priority == 'Low' ? 'priority-low' : (task.priority == 'Medium' ? 'priority-medium' : 'priority-high')}"
-                class="badge-priority"
-                th:text="${task.priority}"
-              >
-                Priority
-              </span>
-            </div>
+          <div
+            class="task-card border-left-primary p-3 bg-white"
+            th:onclick="|window.location.href='@{/project/{id}/tasks/{taskId}(id=${projectId}, taskId=${task.id})}'|"
+          >
+            <h5 class="font-weight-bold" th:text="${task.title}">Task Title</h5>
             <p class="text-muted" th:text="${task.description}">
               Task description goes here.
             </p>
-            <p>
-              <strong>Status:</strong>
-              <span th:text="${task.status}">To Do</span>
-            </p>
-            <p>
-              <strong>Deadline:</strong>
-              <span
-                th:text="${#temporals.format(task.deadline, 'yyyy-MM-dd HH:mm')}"
-              ></span>
-            </p>
-            <p>
-              <strong>Created At:</strong>
-              <span
-                th:text="${#temporals.format(task.createdAt, 'yyyy-MM-dd HH:mm')}"
-              ></span>
-            </p>
-            <form
-              th:action="@{/tasks/update/status/{id}(id=${task.id}, projectId=${projectId})}"
-              method="post"
-            >
-              <div class="form-group">
-                <label>Change Status:</label>
-                <select
-                  class="form-control"
-                  name="status"
-                  th:value="${task.status}"
-                >
-                  <option value="To Do" th:selected="${task.status == 'To Do'}">
-                    To Do
-                  </option>
-                  <option
-                    value="In Progress"
-                    th:selected="${task.status == 'In Progress'}"
-                  >
-                    In Progress
-                  </option>
-                  <option
-                    value="Completed"
-                    th:selected="${task.status == 'Completed'}"
-                  >
-                    Completed
-                  </option>
-                </select>
-              </div>
-              <button type="submit" class="btn btn-sm btn-primary">
-                Update Status
-              </button>
-            </form>
-
-            <form
-              th:action="@{/tasks/update/priority/{id}(id=${task.id}, projectId=${projectId})}"
-              method="post"
-            >
-              <div class="form-group">
-                <label>Change Priority:</label>
-                <select
-                  class="form-control"
-                  name="priority"
-                  th:value="${task.priority}"
-                >
-                  <option value="Low" th:selected="${task.priority == 'Low'}">
-                    Low
-                  </option>
-                  <option
-                    value="Medium"
-                    th:selected="${task.priority == 'Medium'}"
-                  >
-                    Medium
-                  </option>
-                  <option value="High" th:selected="${task.priority == 'High'}">
-                    High
-                  </option>
-                </select>
-              </div>
-              <button type="submit" class="btn btn-sm btn-primary">
-                Update Priority
-              </button>
-            </form>
-
-            <div class="task-footer">
-              <div>
-                <strong>Assigned To:</strong>
-                <span
-                  th:text="${task.assignedTo != null ? task.assignedTo.name : 'Unassigned'}"
-                  >John Doe</span
-                >
-              </div>
-              <form
-                th:action="@{/tasks/delete/{taskId}(taskId=${task.id})}"
-                method="post"
-              >
-                <input type="hidden" name="projectId" th:value="${projectId}" />
-                <button class="btn btn-sm btn-danger" type="submit">
-                  Delete
-                </button>
-              </form>
-            </div>
           </div>
         </div>
       </div>

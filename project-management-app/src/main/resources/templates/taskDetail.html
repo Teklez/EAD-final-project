@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Task Details</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <style>
+      .task-card {
+        margin-bottom: 20px;
+        border-radius: 10px;
+        padding: 15px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+        width: 100%;
+      }
+      .task-card:hover {
+        transform: scale(1.02);
+      }
+      .task-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .task-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 10px;
+      }
+      .badge-priority {
+        padding: 5px 10px;
+        font-size: 0.9rem;
+        border-radius: 5px;
+      }
+      .priority-low {
+        background-color: #28a745;
+        color: white;
+      }
+      .priority-medium {
+        background-color: #ffc107;
+        color: black;
+      }
+      .priority-high {
+        background-color: #dc3545;
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="#">
+        <img width="100" th:src="@{/images/task_image.png}" alt="Logo" />
+      </a>
+      <button
+        class="navbar-toggler"
+        type="button"
+        data-toggle="collapse"
+        data-target="#navbarNav"
+      >
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/project}">Projects</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/members}">Members</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" th:href="@{/profile}">Profile</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="container mt-4">
+      <h1>Task Details</h1>
+      <div class="task-card">
+        <div class="task-header">
+          <h3 th:text="${task.title}">Task Title</h3>
+          <span
+            th:classappend="${task.priority == 'Low' ? 'priority-low' : (task.priority == 'Medium' ? 'priority-medium' : 'priority-high')}"
+            class="badge-priority"
+            th:text="${task.priority}"
+          >
+            Priority
+          </span>
+        </div>
+        <p th:text="${task.description}">Task description goes here.</p>
+        <p>
+          <strong>Status:</strong> <span th:text="${task.status}">To Do</span>
+        </p>
+        <p>
+          <strong>Deadline:</strong>
+          <span
+            th:text="${#temporals.format(task.deadline, 'yyyy-MM-dd HH:mm')}"
+          ></span>
+        </p>
+        <p>
+          <strong>Created At:</strong>
+          <span
+            th:text="${#temporals.format(task.createdAt, 'yyyy-MM-dd HH:mm')}"
+          ></span>
+        </p>
+
+        <!-- Form to Update Task Status -->
+        <form
+          th:action="@{/tasks/update/status/{id}(id=${task.id}, projectId=${projectId})}"
+          method="post"
+        >
+          <div class="form-group">
+            <label>Change Status:</label>
+            <select class="form-control" name="status">
+              <option value="To Do" th:selected="${task.status == 'To Do'}">
+                To Do
+              </option>
+              <option
+                value="In Progress"
+                th:selected="${task.status == 'In Progress'}"
+              >
+                In Progress
+              </option>
+              <option
+                value="Completed"
+                th:selected="${task.status == 'Completed'}"
+              >
+                Completed
+              </option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-sm btn-primary">
+            Update Status
+          </button>
+        </form>
+
+        <!-- Form to Update Task Priority -->
+        <form
+          th:action="@{/tasks/update/priority/{id}(id=${task.id}, projectId=${projectId})}"
+          method="post"
+        >
+          <div class="form-group">
+            <label>Change Priority:</label>
+            <select class="form-control" name="priority">
+              <option value="Low" th:selected="${task.priority == 'Low'}">
+                Low
+              </option>
+              <option value="Medium" th:selected="${task.priority == 'Medium'}">
+                Medium
+              </option>
+              <option value="High" th:selected="${task.priority == 'High'}">
+                High
+              </option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-sm btn-primary">
+            Update Priority
+          </button>
+        </form>
+
+        <!-- Form to Assign Task -->
+        <form
+          th:action="@{/tasks/assign/{taskId}(taskId=${task.id})}"
+          method="post"
+        >
+          <div class="form-group">
+            <label>Assign Task:</label>
+            <select class="form-control" name="assignee">
+                <option
+                th:each="member : ${members}"
+                th:value="${member.email}"
+                th:text="${member.name}"
+              ></option>
+            </select>
+          </div>
+          <input type="hidden" name="projectId" th:value="${projectId}" />
+          <button type="submit" class="btn btn-sm btn-primary">Assign</button>
+        </form>
+
+        <!-- Assigned Members Display -->
+        <div>
+          <p><strong>Assigned To:</strong></p>
+          <span
+            th:if="${task.getMembers() != null and not #lists.isEmpty(task.getMembers())}"
+          >
+            <span th:each="member, iterStat : ${task.getMembers()}">
+              <span th:text="${member.name}"></span>
+              <span th:if="${!iterStat.last}">, </span>
+            </span>
+          </span>
+          <span
+            th:if="${task.getMembers() == null or #lists.isEmpty(task.getMembers())}"
+            >Unassigned</span
+          >
+        </div>
+
+        <!-- Delete Task Button -->
+        <form
+          th:action="@{/tasks/delete/{taskId}(taskId=${task.id})}"
+          method="post"
+        >
+          <input type="hidden" name="projectId" th:value="${projectId}" />
+          <button class="btn btn-sm btn-danger" type="submit">Delete</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
