@@ -50,6 +50,12 @@ public class TaskController {
         return "tasks";
     }
 
+    @GetMapping("/project/{id}/tasks/add/chat")
+    public String showChatTaskForm(@PathVariable("id") Long projectId, Model model) {
+        model.addAttribute("projectId", projectId);
+        return "chatTask";
+    }
+
     @GetMapping("/project/{projectId}/tasks/{taskId}")
     public String viewTaskDetails(@PathVariable Long taskId, @PathVariable Long projectId, Model model) {
         Project project = projectService.findById(projectId)
@@ -69,12 +75,25 @@ public class TaskController {
     }
 
     @PostMapping("/project/{id}/tasks/add")
-    public String addTask(@PathVariable("id") Long projectId, @RequestParam String prompt) {
-        // task.setProject(projectId);
-
+    public String addManualTask(@PathVariable("id") Long projectId,
+            @RequestParam String title,
+            @RequestParam String description,
+            @RequestParam String priority) {
         Project project = projectService.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
+        Task task = new Task();
+        task.setTitle(title);
+        task.setDescription(description);
+        task.setPriority(priority);
+        task.setProject(project);
+        taskService.saveTask(task);
+        return "redirect:/project/" + projectId + "/tasks";
+    }
 
+    @PostMapping("/project/{id}/tasks/add/chat")
+    public String addChatTask(@PathVariable("id") Long projectId, @RequestParam String prompt) {
+        Project project = projectService.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Project not found"));
         Task task = chatGptApiService.getTaskObject(prompt);
         task.setProject(project);
         taskService.saveTask(task);
