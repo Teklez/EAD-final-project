@@ -3,7 +3,6 @@ package com.anayonzem.project_management_app.model;
 import jakarta.persistence.*;
 
 import java.sql.Date;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity

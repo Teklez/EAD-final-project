@@ -14,7 +14,7 @@ public class ProjectManagementAppApplication {
     public static void main(String[] args) {
         ApplicationContext context = SpringApplication.run(ProjectManagementAppApplication.class, args);
         // Get the EmailService bean from the context
-        EmailService emailService = context.getBean(EmailService.class);
+        // EmailService emailService = context.getBean(EmailService.class);
         // Call email sending methods
         // emailService.sendProjectInvitation("amanueltsehay11@gmail.com", "Amanuel",
         // "Awesome Project", "http://localhost:8080/signup", "Example Company");

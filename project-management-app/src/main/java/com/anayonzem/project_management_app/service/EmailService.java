@@ -21,7 +21,6 @@ public class EmailService {
     @Value("${sendgrid.from.email}")
     private String fromEmail;
 
-    private static final String PROJECT_PATH = "src/main/resources/templates/project_invitation.html";
     private static final String NOTIFICATION_PATH = "src/main/resources/templates/project_invitation.html";
     private static final String TASK_PATH = "src/main/resources/templates/task_reminder.html";
     private static final String PLATFORM_PATH = "src/main/resources/templates/platform_invitation.html";
