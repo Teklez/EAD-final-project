@@ -17,14 +17,14 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/signup", "/login", "index","/static/**").permitAll()
+                .requestMatchers("/", "/signup", "/login", "index","/static/**","/static/images/task_image.png").permitAll()
                 .anyRequest().authenticated())
             .formLogin(form -> form
                 .loginPage("/index")    
                 .usernameParameter("email")
                 .passwordParameter("password")
                 .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/dashboard", true)
+                .defaultSuccessUrl("/project", true)
                 .failureUrl("/error")
                 .permitAll())
             .logout(logout -> logout

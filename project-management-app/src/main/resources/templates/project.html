@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
@@ -64,6 +65,9 @@
 
         .navbar-brand img {
             transition: transform 0.3s ease;
+            border-radius: 100%;            
+            width: 40px;
+            height: 40px;   
         }
 
         .navbar-brand:hover img {
@@ -150,6 +154,13 @@
 
         .btn-add-project:hover i {
             transform: rotate(90deg);
+        }
+
+        .title-neger {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          padding: 10px;
         }
 
         .project-card {
@@ -243,6 +254,14 @@
             border-radius: 50%;
             pointer-events: none;
         }
+        
+        /* View More/Less Styles */
+        .view-more {
+            color: var(--primary-color);
+            cursor: pointer;
+            text-decoration: underline;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
@@ -259,10 +278,7 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/dashboard">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/members">Members</a>
+                        <a class="nav-link" href="/project">Project</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/profile">Profile</a>
@@ -273,19 +289,24 @@
     </nav>
 
     <div class="container">
+      <div class="title-neger">
         <h1 class="mb-4">Projects</h1>
         <a href="/addProject" class="btn-add-project mb-4">
             <i class="fas fa-plus"></i>
             Add New Project
         </a>
+
+      </div>
+       
         <div class="row justify-content-center">
-            <div class="col-md-4" th:each="project : ${projects}">
+            <div class="col-md-4" th:each="project : ${projects}"
+            th:onclick="|window.location.href='@{/project/{id}(id=${project.id})}'|">
                 <div class="project-card">
                     <img th:src="@{/images/project_image.png}" class="card-img-top" alt="Project Image" />
                     <div class="card-body">
                         <h5 class="card-title" th:text="${project.name}">Project Name</h5>
                         <p class="card-text" th:text="${project.description}">Project Description</p>
-                        <a th:href="@{/project/{id}(id=${project.id})}" class="btn-view">View Project</a>
+                        <!-- <a th:href="@{/project/{id}(id=${project.id})}" class="btn-view">View Project</a> -->
                     </div>
                 </div>
             </div>
@@ -333,6 +354,38 @@
             const cards = document.querySelectorAll('.project-card');
             cards.forEach((card, index) => {
                 card.style.animationDelay = `${index * 0.2}s`;
+            });
+
+            // View More / View Less Functionality
+            const MAX_WORDS = 50;
+            const cardTexts = document.querySelectorAll('.card-text');
+
+            cardTexts.forEach(function(cardText) {
+                const fullText = cardText.textContent.trim();
+                const words = fullText.split(/\s+/);
+                
+                if (words.length > MAX_WORDS) {
+                    const truncatedText = words.slice(0, MAX_WORDS).join(' ') + '... ';
+                    
+                    cardText.textContent = truncatedText;
+
+                    const viewMore = document.createElement('span');
+                    viewMore.classList.add('view-more');
+                    viewMore.textContent = 'View More';
+
+                    viewMore.addEventListener('click', function() {
+                        if (viewMore.textContent === 'View More') {
+                            cardText.textContent = fullText + ' ';
+                            viewMore.textContent = 'View Less';
+                        } else {
+                            cardText.textContent = truncatedText;
+                            viewMore.textContent = 'View More';
+                        }
+                        cardText.appendChild(viewMore);
+                    });
+
+                    cardText.appendChild(viewMore);
+                }
             });
         });
     </script>

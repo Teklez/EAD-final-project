@@ -57,11 +57,11 @@
             backdrop-filter: blur(10px);
             animation: fadeInUp 0.8s ease-out;
         }
-
-        .navbar-brand {
-            color: white !important;
-            font-weight: 600;
-            transition: all 0.3s ease;
+        .navbar-brand img {
+            transition: transform 0.3s ease;
+            border-radius: 100%;            
+            width: 40px;
+            height: 40px;   
         }
 
         .navbar-brand:hover {
@@ -220,7 +220,7 @@
             .project-title {
                 font-size: 2rem;
             }
-
+ 
             .action-buttons {
                 flex-direction: column;
             }
@@ -235,17 +235,16 @@
 <body>
     <nav class="navbar navbar-expand-lg">
         <div class="container">
-            <a class="navbar-brand" href="/">Project Manager</a>
+            <a class="navbar-brand" href="/"> 
+          <img width="100" height="40" th:src="@{/images/task_image.png}" alt="Logo" />
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/dashboard">Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/members">Members</a>
+                        <a class="nav-link" href="/project">Projects</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/profile">Profile</a>

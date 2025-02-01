@@ -51,11 +51,14 @@
             backdrop-filter: blur(10px);
             animation: fadeInUp 0.8s ease-out;
             padding: 1rem 2rem;
-            height: 100px;
+            height: 50px;
         }
 
         .navbar-brand img {
             transition: transform 0.3s ease;
+            border-radius: 100%;            
+            width: 40px;
+            height: 40px;   
         }
 
         .navbar-brand:hover img {
@@ -117,6 +120,11 @@
             align-items: center;
             gap: 10px;
         }
+        .task-holder{
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
 
         .btn-new-task:hover {
             transform: translateY(-2px);
@@ -150,7 +158,7 @@
 
         .task-card p {
             color: var(--text-color);
-            margin-bottom: 0;
+            margin-bottom: 0.5rem;
             opacity: 0.8;
         }
 
@@ -200,7 +208,7 @@
 <body>
     <nav class="navbar navbar-expand-lg">
         <a class="navbar-brand" href="#">
-            <img width="100" th:src="@{/images/task_image.png}" alt="Logo" />
+            <img width="100" height="40" th:src="@{/images/task_image.png}" alt="Logo" />
         </a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
@@ -210,9 +218,7 @@
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/project}">Projects</a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/members}">Members</a>
-                </li>
+               
                 <li class="nav-item">
                     <a class="nav-link" th:href="@{/profile}">Profile</a>
                 </li>
@@ -233,9 +239,24 @@
             <div class="col-md-12" th:each="task, iterStat : ${tasks}">
                 <div class="task-card" th:style="'animation-delay: ' + ${iterStat.index * 0.1} + 's'"
                      th:onclick="|window.location.href='@{/project/{id}/tasks/{taskId}(id=${projectId}, taskId=${task.id})}'|">
-                    <h5 th:text="${task.title}">Task Title</h5>
+                   <div class="task-holder">
+                    <div>
+                      <h5 th:text="${task.title}">Task Title</h5>
                     <p th:text="${task.description}">Task description goes here.</p>
+
+                    </div>
                     
+                    <p>
+                        <span th:text="${task.status}" class="badge"
+                              th:classappend="${task.status == 'To Do'} ? ' badge-primary' : (${task.status == 'In Progress'} ? ' badge-warning' : ' badge-success')">
+                        </span>
+                    </p>
+                    <p>
+                        <strong>Priority:</strong> <span th:text="${task.priority}">High</span>
+                    </p>
+
+                   </div>
+                     
                 </div>
             </div>
         </div>
