@@ -1,5 +1,7 @@
 package com.anayonzem.project_management_app.controller;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,14 +80,18 @@ public class TaskController {
     public String addManualTask(@PathVariable("id") Long projectId,
             @RequestParam String title,
             @RequestParam String description,
-            @RequestParam String priority) {
+            @RequestParam String priority,
+            @RequestParam Date deadline) {
         Project project = projectService.findById(projectId)
                 .orElseThrow(() -> new RuntimeException("Project not found"));
         Task task = new Task();
         task.setTitle(title);
+        task.setDeadline(deadline);
+        task.setStatus("To Do");
         task.setDescription(description);
         task.setPriority(priority);
         task.setProject(project);
+        task.setCreatedAt(Date.valueOf(LocalDateTime.now().toLocalDate()));
         taskService.saveTask(task);
         return "redirect:/project/" + projectId + "/tasks";
     }

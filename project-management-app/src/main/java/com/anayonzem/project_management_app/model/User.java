@@ -8,23 +8,25 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String name;
+
     @Column(nullable = false, unique = true)
     private String email;
+
     private String password;
     private String role;
 
-    @OneToMany(mappedBy = "teamLead")
+    @OneToMany(mappedBy = "teamLead", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Project> projects;
 
-    @OneToMany(mappedBy = "teamLead")
+    @OneToMany(mappedBy = "teamLead", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<User> teamMembers;
 
     @ManyToOne
     @JoinColumn(name = "team_lead_id")
     private User teamLead;
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -88,7 +90,4 @@ public class User {
     public void setTeamLead(User teamLead) {
         this.teamLead = teamLead;
     }
-
-
-    
 }

@@ -136,8 +136,17 @@
               <option value="High">High</option>
             </select>
           </div>
+          <div class="mb-3">
+            <label for="deadline" class="form-label">Deadline</label>
+            <input
+              type="date"
+              id="deadline"
+              name="deadline"
+              class="form-control"
+              required
+            />
+          </div>
           <button type="submit" class="btn btn-primary">Add Task</button>
-          <!-- Chat Task Button -->
           <a
             th:href="@{/project/{id}/tasks/add/chat(id=${projectId})}"
             class="btn btn-primary ms-2"

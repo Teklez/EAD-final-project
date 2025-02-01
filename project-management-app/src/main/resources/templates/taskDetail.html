@@ -97,13 +97,13 @@
         <p>
           <strong>Deadline:</strong>
           <span
-            th:text="${#temporals.format(task.deadline, 'yyyy-MM-dd HH:mm')}"
+            th:text="${task.deadline}"
           ></span>
         </p>
         <p>
           <strong>Created At:</strong>
           <span
-            th:text="${#temporals.format(task.createdAt, 'yyyy-MM-dd HH:mm')}"
+            th:text="${task.createdAt}"
           ></span>
         </p>
 

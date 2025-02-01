@@ -1,6 +1,8 @@
 package com.anayonzem.project_management_app.model;
 
 import jakarta.persistence.*;
+
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -16,8 +18,8 @@ public class Task {
 
     @Lob
     private String description;
-    private LocalDateTime deadline;
-    private LocalDateTime createdAt;
+    private Date deadline;
+    private Date createdAt;
 
     @ManyToOne
     @JoinColumn(name = "assigned_to_id")
@@ -63,19 +65,19 @@ public class Task {
         this.priority = priority;
     }
 
-    public LocalDateTime getDeadline() {
+    public Date getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(LocalDateTime deadline) {
+    public void setDeadline(Date deadline) {
         this.deadline = deadline;
     }
 
-    public LocalDateTime getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(LocalDateTime createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 

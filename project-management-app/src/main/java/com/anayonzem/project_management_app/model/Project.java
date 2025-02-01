@@ -1,7 +1,6 @@
 package com.anayonzem.project_management_app.model;
 
 import jakarta.persistence.*;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +10,7 @@ public class Project {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
+
     @Lob
     private String description;
 
@@ -18,10 +18,10 @@ public class Project {
     @JoinColumn(name = "team_lead_id")
     private User teamLead;
 
-    @OneToMany(mappedBy = "project")
-    private List<Task> tasks;
+    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Task> tasks = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "project_team_members", joinColumns = @JoinColumn(name = "project_id"), inverseJoinColumns = @JoinColumn(name = "user_id"))
     private List<User> teamMembers = new ArrayList<>();
 
