@@ -21,7 +21,7 @@ public class ChatGptApiService {
      * Converts a task description into a Task object.
      */
     public Task getTaskObject(String prompt) {
-        String context = "You are a very helpful assistant that transforms a given task description into JSON. The JSON must have fields: 'title' (string), 'description' (string), 'deadline' (ISO 8601 format), 'createdAt' (ISO 8601 format),'status' ('To Do','In Progress', 'Completed') and 'priority' (High, Medium, or Low).";
+        String context = "You are a very helpful assistant that transforms a given task description into JSON. Also the description of the task should be very long atleast 100 words The JSON must have fields: 'title' (string), 'description' (string), 'deadline' (ISO 8601 format), 'createdAt' (ISO 8601 format),'status' ('To Do','In Progress', 'Completed') and 'priority' (High, Medium, or Low).";
         String contextualPrompt = context + " " + prompt;
 
         for (int attempt = 1; attempt <= 3; attempt++) {

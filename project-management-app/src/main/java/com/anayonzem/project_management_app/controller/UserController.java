@@ -42,7 +42,7 @@ public class UserController {
 
     @GetMapping("/")
     public String root(Authentication authentication) {
-        return "redirect:/dashboard";
+        return "redirect:/index";
     }
 
     @GetMapping("/index")
